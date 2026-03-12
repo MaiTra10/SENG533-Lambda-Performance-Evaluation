@@ -1,0 +1,6 @@
+.vscode/*
+
+**/.terraform
+
+**/*.zip
+**/bootstrap

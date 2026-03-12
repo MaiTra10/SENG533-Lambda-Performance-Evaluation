@@ -39,7 +39,7 @@ resource "aws_iam_role_policy_attachment" "role-policy" {
 # Source Code .zip Directory
 locals {
   repo_root           = abspath("${path.root}/..")
-  source_code_zip_dir = "${local.repo_root}/api/go/${var.zip_dir_slice}/deploy/bootstrap.zip"
+  source_code_zip_dir = "${local.repo_root}/lambda/${var.path_name}/${var.zip_dir_slice}/deploy/bootstrap.zip"
 }
 # Lambda Function
 resource "aws_lambda_function" "lambda" {
@@ -53,8 +53,6 @@ resource "aws_lambda_function" "lambda" {
   architectures    = var.architectures
   memory_size      = var.memory_size
 
-  layers           = var.layers
-
   # Lambda code file
   filename         = local.source_code_zip_dir
   source_code_hash = filebase64sha256(local.source_code_zip_dir)
@@ -64,6 +62,20 @@ resource "aws_lambda_function" "lambda" {
     content {
       variables = var.environment_variables
     }
+  }
+
+}
+
+# Function URLS
+resource "aws_lambda_function_url" "lambda_url" {
+
+  function_name      = aws_lambda_function.lambda.function_name
+  authorization_type = "NONE"
+
+  cors {
+    allow_origins = ["*"]
+    allow_methods = ["*"]
+    allow_headers = ["*"]
   }
 
 }

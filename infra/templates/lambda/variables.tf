@@ -27,9 +27,13 @@ variable "timeout" {
   description = "Lambda function timeout in seconds (default is 3s)."
   default     = 3
 }
+variable "path_name" {
+  type        = string
+  description = "Name of the path inside of ./lambda (python, java, go)."
+}
 variable "zip_dir_slice" {
   type        = string
-  description = "The relative directory path segment used to locate the Lambda deployment package (bootstrap.zip)."
+  description = "The relative directory path to the source code of the Lambda function which will have the deployment zip file (<zip_dir_slice>/deploy/bootstrap.zip)."
 }
 variable "runtime" {
   type        = string
@@ -43,11 +47,6 @@ variable "memory_size" {
   type        = number
   description = "Amount of memory in MB your Lambda function can use at runtime (128MB - 32768MB)."
   default     = 128
-}
-variable "layers" {
-  type        = list(string)
-  description = "List of Lambda Layer version ARNs to attach to the function."
-  default     = []
 }
 variable "environment_variables" {
   type        = map(string)
