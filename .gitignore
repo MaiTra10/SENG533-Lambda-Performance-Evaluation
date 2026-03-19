@@ -4,3 +4,8 @@
 
 **/*.zip
 **/bootstrap
+
+**/bootstrap.jar
+**/out
+
+backend.tf

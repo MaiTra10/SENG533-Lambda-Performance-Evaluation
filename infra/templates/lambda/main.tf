@@ -39,7 +39,7 @@ resource "aws_iam_role_policy_attachment" "role-policy" {
 # Source Code .zip Directory
 locals {
   repo_root           = abspath("${path.root}/..")
-  source_code_zip_dir = "${local.repo_root}/lambda/${var.path_name}/${var.zip_dir_slice}/deploy/bootstrap.zip"
+  source_code_zip_dir = "${local.repo_root}/lambda/${var.path_name}/${var.zip_dir_slice}/deploy/${var.deployment_file}"
 }
 # Lambda Function
 resource "aws_lambda_function" "lambda" {

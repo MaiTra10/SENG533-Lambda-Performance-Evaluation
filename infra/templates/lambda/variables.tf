@@ -35,6 +35,10 @@ variable "zip_dir_slice" {
   type        = string
   description = "The relative directory path to the source code of the Lambda function which will have the deployment zip file (<zip_dir_slice>/deploy/bootstrap.zip)."
 }
+variable "deployment_file" {
+  type        = string
+  description = "The file  to be deployed."
+}
 variable "runtime" {
   type        = string
   description = "Lambda runtime identifier (e.g., provided.al2, nodejs20.x, python3.12)."
