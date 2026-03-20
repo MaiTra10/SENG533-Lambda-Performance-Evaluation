@@ -28,14 +28,14 @@ module "exp1_python_x86" {
   source = "./templates/lambda"
 
   path_name = "python"
-  zip_dir_slice = "placeholder"
+  zip_dir_slice = "experiment1"
   deployment_file = "bootstrap.zip"
 
   function_name = "exp1-python-x86"
 
   architectures = ["x86_64"]
   runtime = "python3.13"
-  handler = "main.exp1_x86"
+  handler = "main.exp1_workloads"
   memory_size = local.exp1_memory_size
   timeout     = local.exp1_timeout
 
@@ -53,14 +53,14 @@ module "exp1_python_arm" {
   source = "./templates/lambda"
 
   path_name = "python"
-  zip_dir_slice = "placeholder"
+  zip_dir_slice = "experiment1"
   deployment_file = "bootstrap.zip"
 
   function_name = "exp1-python-arm"
 
   architectures = ["arm64"]
   runtime = "python3.13"
-  handler = "main.exp1_x86"
+  handler = "main.exp1_workloads"
   memory_size = local.exp1_memory_size
   timeout     = local.exp1_timeout
 
