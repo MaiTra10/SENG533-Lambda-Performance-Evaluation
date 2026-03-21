@@ -1,6 +1,5 @@
 import json
 import boto3
-import base64
 
 client = boto3.client('lambda')
 with open('test.txt','r') as f:
