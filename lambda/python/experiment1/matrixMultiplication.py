@@ -1,7 +1,7 @@
 import random
 
 def multiply_matrix(event, context):
-    #generate random lengths and widths
+    #generate random matrix dimensions
     A_rows = random.randint(90,100)
     A_cols = random.randint(90,100)
     B_rows = A_cols
