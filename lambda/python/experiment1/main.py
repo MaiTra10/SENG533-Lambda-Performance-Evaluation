@@ -1,4 +1,6 @@
+from matrixMultiplication import multiply_matrix
+
+
 def exp1_workloads(event, context):
-    #run the functions for CPU and I/O workloads here
-    #run at 50 requests/s
-    return {"statusCode": 200}
+    multiply_matrix()
+    return {"statusCode": 200, "body": "ok"}

@@ -1,6 +1,6 @@
 import random
 
-def multiply_matrix(event, context):
+def multiply_matrix():
     #generate random matrix dimensions
     A_rows = random.randint(90,100)
     A_cols = random.randint(90,100)
@@ -20,4 +20,4 @@ def multiply_matrix(event, context):
             for z in range(len(B)):
                 result[x][y] += A[x][z] * B[z][y]
 
-    return {"statusCode": 200}
+    return result

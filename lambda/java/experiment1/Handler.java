@@ -8,11 +8,11 @@ import java.util.Random;
 public class Handler implements RequestHandler<Map<String, Object>, String> {
     @Override
     public String handleRequest(Map<String, Object> input, Context context) {
-        //run test functions in here
-        return "Hello from Lambda!";
+        matrix_mult();
+        return "{\"statusCode\": 200, \"body\": \"ok\"}";
     }
 
-    public void matrix_mult () {
+    private void matrix_mult() {
         Random rand = new Random();
 
         //generate random matrix dimensions
