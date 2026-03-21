@@ -31,6 +31,6 @@ def exp1_x86(event, context):
         
         return {
             'statusCode': 500,
-            'body': json.dumps(f'Error uploading file: {e}')
+            'body': json.dumps(f'Error while uploading file: {e}')
         }
 
