@@ -3,7 +3,6 @@
 # 2- create a function on lambda using python 3.14 and x86
 import json
 import boto3
-import base64
 
 s3_client = boto3.client('s3', region_name='ca-central-1')
 def exp1_x86(event, context):
