@@ -9,19 +9,19 @@ import (
 )
 
 func main() {
-	lambda.Start(placeholder)
+	lambda.Start(matrix_mult)
 }
 
 type Response struct {
 	StatusCode int `json:"statusCode"`
 }
 
-func placeholder(ctx context.Context) (Response, error) {
+func matrix_mult(ctx context.Context) (Response, error) {
 	//generate random matrix dimensions
-	A_rows := rand.IntN(11) + 90
+	A_rows := rand.IntN(11) + 90 //90-100
 	A_cols := rand.IntN(11) + 90
 	B_rows := A_cols
-	B_cols := rand.IntN(11) + 100
+	B_cols := rand.IntN(11) + 100 //100-110
 
 	//generate random matrices
 	A := make([][]int, A_rows)
