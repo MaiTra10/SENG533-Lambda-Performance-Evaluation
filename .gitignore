@@ -1,9 +1,12 @@
 .vscode/*
 
 **/.terraform
+**/*.tfstate
+**/*.tfstate.backup
 
 **/*.zip
 **/bootstrap
+**/bootstrap_*
 
 **/bootstrap.jar
 **/out
