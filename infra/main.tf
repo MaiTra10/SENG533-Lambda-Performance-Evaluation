@@ -172,22 +172,22 @@ module "exp1_java_arm" {
   actions = ["s3:*"]
 }
 
-# # ============
-# # Experiment 2
-# # ============
-# locals {
-#   exp2_memory_config_1 = 128
-#   exp2_memory_config_2 = 1024
-#   exp2_memory_config_3 = 1769
-#   exp2_memory_config_4 = 3008
-#   exp2_memory_config_5 = 3008
-#   exp2_timeout      = 10
-# }
-# # ============
-# # x86
-# # ============
-# module "exp2_java_x86_128" {
-#   source = "./templates/lambda"
+# ============
+# Experiment 2
+# ============
+locals {
+  exp2_memory_config_1 = 128
+  exp2_memory_config_2 = 1024
+  exp2_memory_config_3 = 1769
+  # exp2_memory_config_4 = 3008
+  # exp2_memory_config_5 = 3008
+  exp2_timeout      = 10
+}
+# ============
+# x86
+# ============
+module "exp2_java_x86_128" {
+  source = "./templates/lambda"
 
 #   path_name       = "java"
 #   zip_dir_slice   = "placeholder"
@@ -195,11 +195,11 @@ module "exp1_java_arm" {
 
 #   function_name = "exp2-java-x86-128"
 
-#   architectures = ["x86_64"]
-#   runtime       = "java21"
-#   handler       = "seng533.lambda.java.placeholder.Handler::handleRequest"
-#   memory_size   = local.exp2_memory_config_1
-#   timeout       = local.exp2_timeout
+  architectures = ["x86_64"]
+  runtime       = "java25"
+  handler       = "seng533.lambda.java.placeholder.Handler::handleRequest"
+  memory_size   = local.exp2_memory_config_1
+  timeout       = local.exp2_timeout
 
 #   resources = [
 #     aws_s3_bucket.private_bucket.arn,
@@ -217,11 +217,11 @@ module "exp1_java_arm" {
 
 #   function_name = "exp2-java-x86-1024"
 
-#   architectures = ["x86_64"]
-#   runtime       = "java21"
-#   handler       = "seng533.lambda.java.placeholder.Handler::handleRequest"
-#   memory_size   = local.exp2_memory_config_2
-#   timeout       = local.exp2_timeout
+  architectures = ["x86_64"]
+  runtime       = "java25"
+  handler       = "seng533.lambda.java.placeholder.Handler::handleRequest"
+  memory_size   = local.exp2_memory_config_2
+  timeout       = local.exp2_timeout
 
 #   resources = [
 #     aws_s3_bucket.private_bucket.arn,
@@ -239,11 +239,35 @@ module "exp1_java_arm" {
 
 #   function_name = "exp2-java-x86-1769"
 
-#   architectures = ["x86_64"]
-#   runtime       = "java21"
-#   handler       = "seng533.lambda.java.placeholder.Handler::handleRequest"
-#   memory_size   = local.exp2_memory_config_3
-#   timeout       = local.exp2_timeout
+  architectures = ["x86_64"]
+  runtime       = "java25"
+  handler       = "seng533.lambda.java.placeholder.Handler::handleRequest"
+  memory_size   = local.exp2_memory_config_3
+  timeout       = local.exp2_timeout
+
+#   resources = [
+#     aws_s3_bucket.private_bucket.arn,
+#     "${aws_s3_bucket.private_bucket.arn}/*"
+#   ]
+#   actions = ["s3:*"]
+# }
+
+# NOTE; Currently do not have access to depoy Lambdas over 3GB
+
+module "exp2_java_x86_3008" {
+  source = "./templates/lambda"
+
+#   path_name       = "java"
+#   zip_dir_slice   = "placeholder"
+#   deployment_file = "bootstrap.jar"
+
+  function_name = "exp2-java-x86-3008"
+
+  architectures = ["x86_64"]
+  runtime       = "java25"
+  handler       = "seng533.lambda.java.placeholder.Handler::handleRequest"
+  memory_size   = 3008
+  timeout       = local.exp2_timeout
 
 #   resources = [
 #     aws_s3_bucket.private_bucket.arn,
@@ -262,7 +286,7 @@ module "exp1_java_arm" {
 #   function_name = "exp2-java-x86-5307"
 
 #   architectures = ["x86_64"]
-#   runtime       = "java21"
+#   runtime       = "java25"
 #   handler       = "seng533.lambda.java.placeholder.Handler::handleRequest"
 #   memory_size   = local.exp2_memory_config_4
 #   timeout       = local.exp2_timeout
@@ -280,11 +304,15 @@ module "exp1_java_arm" {
 #   path_name       = "java"
 #   zip_dir_slice   = "placeholder"
 #   deployment_file = "bootstrap.jar"
+#   path_name       = "java"
+#   zip_dir_slice   = "placeholder"
+#   deployment_file = "bootstrap.jar"
 
+#   function_name = "exp2-java-x86-10240"
 #   function_name = "exp2-java-x86-10240"
 
 #   architectures = ["x86_64"]
-#   runtime       = "java21"
+#   runtime       = "java25"
 #   handler       = "seng533.lambda.java.placeholder.Handler::handleRequest"
 #   memory_size   = local.exp2_memory_config_5
 #   timeout       = local.exp2_timeout
@@ -295,11 +323,12 @@ module "exp1_java_arm" {
 #   ]
 #   actions = ["s3:*"]
 # }
-# # ============
-# # ARM
-# # ============
-# module "exp2_java_arm_128" {
-#   source = "./templates/lambda"
+
+# ============
+# ARM
+# ============
+module "exp2_java_arm_128" {
+  source = "./templates/lambda"
 
 #   path_name       = "java"
 #   zip_dir_slice   = "placeholder"
@@ -307,11 +336,11 @@ module "exp1_java_arm" {
 
 #   function_name = "exp2-java-arm-128"
 
-#   architectures = ["arm64"]
-#   runtime       = "java21"
-#   handler       = "seng533.lambda.java.placeholder.Handler::handleRequest"
-#   memory_size   = local.exp2_memory_config_1
-#   timeout       = local.exp2_timeout
+  architectures = ["arm64"]
+  runtime       = "java25"
+  handler       = "seng533.lambda.java.placeholder.Handler::handleRequest"
+  memory_size   = local.exp2_memory_config_1
+  timeout       = local.exp2_timeout
 
 #   resources = [
 #     aws_s3_bucket.private_bucket.arn,
@@ -329,11 +358,11 @@ module "exp1_java_arm" {
 
 #   function_name = "exp2-java-arm-1024"
 
-#   architectures = ["arm64"]
-#   runtime       = "java21"
-#   handler       = "seng533.lambda.java.placeholder.Handler::handleRequest"
-#   memory_size   = local.exp2_memory_config_2
-#   timeout       = local.exp2_timeout
+  architectures = ["arm64"]
+  runtime       = "java25"
+  handler       = "seng533.lambda.java.placeholder.Handler::handleRequest"
+  memory_size   = local.exp2_memory_config_2
+  timeout       = local.exp2_timeout
 
 #   resources = [
 #     aws_s3_bucket.private_bucket.arn,
@@ -351,11 +380,35 @@ module "exp1_java_arm" {
 
 #   function_name = "exp2-java-arm-1769"
 
-#   architectures = ["arm64"]
-#   runtime       = "java21"
-#   handler       = "seng533.lambda.java.placeholder.Handler::handleRequest"
-#   memory_size   = local.exp2_memory_config_3
-#   timeout       = local.exp2_timeout
+  architectures = ["arm64"]
+  runtime       = "java25"
+  handler       = "seng533.lambda.java.placeholder.Handler::handleRequest"
+  memory_size   = local.exp2_memory_config_3
+  timeout       = local.exp2_timeout
+
+#   resources = [
+#     aws_s3_bucket.private_bucket.arn,
+#     "${aws_s3_bucket.private_bucket.arn}/*"
+#   ]
+#   actions = ["s3:*"]
+# }
+
+# NOTE; Currently do not have access to depoy Lambdas over 3GB
+
+module "exp2_java_arm_3008" {
+  source = "./templates/lambda"
+
+#   path_name       = "java"
+#   zip_dir_slice   = "placeholder"
+#   deployment_file = "bootstrap.jar"
+
+  function_name = "exp2-java-arm-3008"
+
+  architectures = ["arm64"]
+  runtime       = "java25"
+  handler       = "seng533.lambda.java.placeholder.Handler::handleRequest"
+  memory_size   = 3008
+  timeout       = local.exp2_timeout
 
 #   resources = [
 #     aws_s3_bucket.private_bucket.arn,
@@ -374,7 +427,7 @@ module "exp1_java_arm" {
 #   function_name = "exp2-java-arm-5307"
 
 #   architectures = ["arm64"]
-#   runtime       = "java21"
+#   runtime       = "java25"
 #   handler       = "seng533.lambda.java.placeholder.Handler::handleRequest"
 #   memory_size   = local.exp2_memory_config_4
 #   timeout       = local.exp2_timeout
@@ -392,15 +445,25 @@ module "exp1_java_arm" {
 #   path_name       = "java"
 #   zip_dir_slice   = "placeholder"
 #   deployment_file = "bootstrap.jar"
+#   path_name       = "java"
+#   zip_dir_slice   = "placeholder"
+#   deployment_file = "bootstrap.jar"
 
+#   function_name = "exp2-java-arm-10240"
 #   function_name = "exp2-java-arm-10240"
 
 #   architectures = ["arm64"]
-#   runtime       = "java21"
+#   runtime       = "java25"
 #   handler       = "seng533.lambda.java.placeholder.Handler::handleRequest"
 #   memory_size   = local.exp2_memory_config_5
 #   timeout       = local.exp2_timeout
 
+#   resources = [
+#     aws_s3_bucket.private_bucket.arn,
+#     "${aws_s3_bucket.private_bucket.arn}/*"
+#   ]
+#   actions = ["s3:*"]
+# }
 #   resources = [
 #     aws_s3_bucket.private_bucket.arn,
 #     "${aws_s3_bucket.private_bucket.arn}/*"
