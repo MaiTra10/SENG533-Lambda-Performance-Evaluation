@@ -36,6 +36,13 @@ resource "aws_iam_role_policy_attachment" "role-policy" {
   policy_arn = aws_iam_policy.lambda-policy.arn
 
 }
+# CloudWatch Logs Policy
+resource "aws_iam_role_policy_attachment" "lambda-logs" {
+
+  role       = aws_iam_role.lambda-role.name
+  policy_arn = "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
+
+}
 # Source Code .zip Directory
 locals {
   repo_root           = abspath("${path.root}/..")
