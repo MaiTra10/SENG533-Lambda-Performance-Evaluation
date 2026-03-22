@@ -9,6 +9,6 @@ output "invoke_arn" {
   value = aws_lambda_function.lambda.invoke_arn
 }
 
-output "lambda_function_url" {
+output "function_url" {
   value = aws_lambda_function_url.lambda_url.function_url
 }
