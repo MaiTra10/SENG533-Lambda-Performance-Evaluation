@@ -35,8 +35,8 @@ COLORS = {
 }
 
 FUNCTION_ORDER = [
-    "exp1-python-x86",
-    "exp1-python-arm",
+    # "exp1-python-x86",
+    # "exp1-python-arm",
     "exp1-go-x86",
     "exp1-go-arm",
     "exp1-java-x86",
@@ -44,8 +44,8 @@ FUNCTION_ORDER = [
 ]
 
 LABELS = {
-    "exp1-python-x86": "Python\n(x86)",
-    "exp1-python-arm": "Python\n(ARM)",
+    # "exp1-python-x86": "Python\n(x86)",
+    # "exp1-python-arm": "Python\n(ARM)",
     "exp1-go-x86":     "Go\n(x86)",
     "exp1-go-arm":     "Go\n(ARM)",
     "exp1-java-x86":   "Java\n(x86)",

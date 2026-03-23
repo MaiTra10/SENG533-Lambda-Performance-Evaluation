@@ -6,6 +6,7 @@ LAMBDA_DIR="$SCRIPT_DIR"
 
 GREEN='\033[0;32m'; YELLOW='\033[1;33m'; RED='\033[0;31m'; NC='\033[0m'
 info()  { echo -e "${GREEN}[build]${NC} $*"; }
+warn()  { echo -e "${YELLOW}[warn]${NC} $*"; }
 error() { echo -e "${RED}[error]${NC} $*"; exit 1; }
 
 make_zip() {
@@ -29,7 +30,12 @@ build_go() {
   info "Building Go CPU"
 
   for arch in arm x86; do
-    if [ "$arch" = "arm" ]; then goarch="arm64"; else goarch="amd64"; fi
+    local goarch out_dir
+    if [ "$arch" = "arm" ]; then
+      goarch="arm64"
+    else
+      goarch="amd64"
+    fi
 
     out_dir="$src/deploy/$arch"
     mkdir -p "$out_dir"
@@ -47,6 +53,7 @@ build_go() {
 
   # I/O
   for variant in placeholder-x86 placeholder-arm; do
+    local goarch src out_dir
 
     if [[ "$variant" == *"arm"* ]]; then
       goarch="arm64"
@@ -75,7 +82,7 @@ build_go() {
 # ─── JAVA ─────────────────────────────────────
 build_java() {
 
-  # CPU
+  # CPU (leave existing working flow unchanged)
   local src="$LAMBDA_DIR/java/experiment1"
   local build_dir="$src/build"
   local out_dir="$src/deploy"
@@ -90,8 +97,9 @@ build_java() {
     javac -cp "lib/*" -d "$build_dir" Handler.java
 
     if [ -d "lib" ]; then
-      for jar in lib/*.jar; do
-        (cd "$build_dir" && jar xf "$OLDPWD/$jar")
+      shopt -s nullglob
+      for jarfile in "$src"/lib/*.jar; do
+        (cd "$build_dir" && jar xf "$jarfile")
       done
     fi
   )
@@ -99,28 +107,24 @@ build_java() {
   jar cf "$out_dir/bootstrap.jar" -C "$build_dir" .
   rm -rf "$build_dir"
 
-  # I/O
-  local src="$LAMBDA_DIR/java/placeholder"
-  local build_dir="$src/build"
-  local out_dir="$src/deploy"
+  # I/O (use Maven Shade)
+  src="$LAMBDA_DIR/java/placeholder"
+  out_dir="$src/deploy"
 
   info "Building Java I/O"
 
+  command -v mvn >/dev/null 2>&1 || error "Maven (mvn) is not installed or not in PATH"
+  [ -f "$src/pom.xml" ] || error "pom.xml not found in $src"
+
   mkdir -p "$out_dir"
-  rm -rf "$build_dir" && mkdir -p "$build_dir"
+  rm -f "$out_dir/bootstrap.jar"
 
   (
     cd "$src"
-
-    javac -cp "lib/*" -d "$build_dir" Handler.java
-
-    for jar in lib/*.jar; do
-      (cd "$build_dir" && jar xf "$OLDPWD/$jar")
-    done
+    mvn -q clean package
   )
 
-  jar cf "$out_dir/bootstrap.jar" -C "$build_dir" .
-  rm -rf "$build_dir"
+  cp "$src/target/bootstrap.jar" "$out_dir/bootstrap.jar"
 }
 
 # ─── PYTHON ───────────────────────────────────
@@ -141,8 +145,8 @@ build_python() {
   )
 
   # I/O
-  local src="$LAMBDA_DIR/python/placeholder"
-  local out_dir="$src/deploy"
+  src="$LAMBDA_DIR/python/placeholder"
+  out_dir="$src/deploy"
 
   info "Building Python I/O"
 

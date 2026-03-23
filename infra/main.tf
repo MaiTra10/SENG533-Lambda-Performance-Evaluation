@@ -1,5 +1,5 @@
 resource "aws_s3_bucket" "private_bucket" {
-  bucket = "seng533-rohil-aksh-performance-evaluation-assets"
+  bucket = "seng533-rohil-aksh-1-performance-evaluation-assets"
 }
 
 resource "aws_s3_bucket_public_access_block" "private_bucket_block" {
