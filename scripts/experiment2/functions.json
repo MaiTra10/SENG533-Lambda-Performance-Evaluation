@@ -1,0 +1,10 @@
+{
+  "exp2-java-x86-128":  "https://REPLACE_ME.lambda-url.us-west-2.on.aws/",
+  "exp2-java-x86-1024": "https://REPLACE_ME.lambda-url.us-west-2.on.aws/",
+  "exp2-java-x86-1769": "https://REPLACE_ME.lambda-url.us-west-2.on.aws/",
+  "exp2-java-x86-3008": "https://REPLACE_ME.lambda-url.us-west-2.on.aws/",
+  "exp2-java-arm-128":  "https://REPLACE_ME.lambda-url.us-west-2.on.aws/",
+  "exp2-java-arm-1024": "https://REPLACE_ME.lambda-url.us-west-2.on.aws/",
+  "exp2-java-arm-1769": "https://REPLACE_ME.lambda-url.us-west-2.on.aws/",
+  "exp2-java-arm-3008": "https://REPLACE_ME.lambda-url.us-west-2.on.aws/"
+}
