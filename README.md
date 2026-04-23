@@ -147,7 +147,32 @@ This queries CloudWatch Logs Insights and saves 3 box plots per experiment:
 - `memory_used.png` — Peak memory used (MB)
 - `cost_per_invocation.png` — Estimated cost per invocation (USD)
 
-> Note: Experiment 4 plots are generated separately from the CSV output (not yet implemented).
+After both runs complete, generate plots from the CSVs:
+
+```bash
+python3 scripts/experiment4/analyze.py \
+    --sustained data/experiment4/results_exp4-python-x86-sustained_<ts>.csv \
+    --burst     data/experiment4/results_exp4-python-x86-burst_<ts>.csv \
+    --output-dir plots/experiment4
+```
+
+The script auto-discovers the latest CSVs in `data/experiment4/` if `--sustained`/`--burst` are omitted.
+
+Plots generated:
+
+- `latency_boxplot.png` — end-to-end latency distribution (burst vs sustained)
+- `latency_cdf.png` — latency CDF comparison
+- `throughput.png` — requests/s over time for each profile
+- `error_timeout_rate.png` — error rate & timeout rate side-by-side
+
+To also plot Lambda execution duration from CloudWatch:
+
+```bash
+python3 scripts/experiment4/analyze.py \
+    --function exp4-python-x86 \
+    --region us-west-2 \
+    --start 2h
+```
 
 ---
 
