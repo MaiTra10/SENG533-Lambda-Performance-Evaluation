@@ -39,6 +39,7 @@ class RequestResult:
     timestamp_received: float
     latency_ms:         float
     http_status:        int
+    lambda_request_id:  str
     error:              str
 
 
@@ -63,6 +64,7 @@ async def send_request(
                 timestamp_received=timestamp_received,
                 latency_ms=(timestamp_received - timestamp_sent) * 1000,
                 http_status=response.status,
+                lambda_request_id=response.headers.get("x-amzn-requestid", ""),
                 error="",
             ))
     except (aiohttp.ClientError, asyncio.TimeoutError) as e:
@@ -74,6 +76,7 @@ async def send_request(
             timestamp_received=time.time(),
             latency_ms=(time.time() - timestamp_sent) * 1000,
             http_status=0,
+            lambda_request_id="",
             error=str(e),
         ))
 

@@ -51,7 +51,7 @@ infra/
 ```bash
 cd lambda/python/experiment1
 mkdir -p deploy
-zip deploy/bootstrap.zip main.py matrixMultiplication.py s3Upload.py
+zip deploy/bootstrap.zip main.py matrixMultiplication.py
 ```
 
 **Go (Experiment 1 — build separately per architecture):**
@@ -61,10 +61,10 @@ cd lambda/go
 mkdir -p experiment1/deploy
 
 GOOS=linux GOARCH=amd64 go build -o experiment1/deploy/bootstrap ./experiment1/matrixMultiplication.go
-cd experiment1/deploy && zip bootstrap-x86.zip bootstrap && rm bootstrap && cd ../../..
+cd experiment1/deploy && zip bootstrap-x86.zip bootstrap && rm bootstrap && cd ../..
 
 GOOS=linux GOARCH=arm64 go build -o experiment1/deploy/bootstrap ./experiment1/matrixMultiplication.go
-cd experiment1/deploy && zip bootstrap-arm.zip bootstrap && rm bootstrap && cd ../../..
+cd experiment1/deploy && zip bootstrap-arm.zip bootstrap && rm bootstrap && cd ../..
 ```
 
 **Java (Experiment 1 + 2 — same JAR):**
@@ -75,8 +75,9 @@ mkdir -p deploy out
 javac -cp lib/aws-lambda-java-core-1.4.0.jar -d out Handler.java
 jar cf deploy/bootstrap.jar -C out .
 mkdir -p /tmp/lambda-deps && cd /tmp/lambda-deps
-jar xf /path/to/lambda/java/experiment1/lib/aws-lambda-java-core-1.4.0.jar
-jar uf /path/to/lambda/java/experiment1/deploy/bootstrap.jar -C /tmp/lambda-deps .
+# NOTE: Replace the path below with the absolute path to the repo on your machine
+jar xf /Users/hamzaamar/repos/SENG533-Lambda-Performance-Evaluation/lambda/java/experiment1/lib/aws-lambda-java-core-1.4.0.jar
+jar uf /Users/hamzaamar/repos/SENG533-Lambda-Performance-Evaluation/lambda/java/experiment1/deploy/bootstrap.jar -C /tmp/lambda-deps .
 ```
 
 ### 2. Deploy with Terraform
@@ -129,30 +130,54 @@ Each run saves a CSV file to `data/experiment{N}/results_{label}_{timestamp}.csv
 
 ---
 
+## Enriching CSVs with Server-Side Metrics
+
+After a load test, enrich the CSVs with execution duration, memory used, and cost per invocation from CloudWatch (wait ~1 minute for logs to ingest first):
+
+```bash
+# Enrich all CSVs for an experiment at once
+python3 scripts/enrich_csv.py \
+    --dir data/experiment1 \
+    --config scripts/experiment1/functions.json \
+    --region us-west-2
+
+# Or enrich a single CSV
+python3 scripts/enrich_csv.py \
+    --csv data/experiment1/results_exp1-python-x86_<ts>.csv \
+    --function exp1-python-x86 \
+    --region us-west-2
+```
+
+This joins on the `lambda_request_id` captured from the `x-amzn-requestid` response header and adds `execution_ms`, `memory_used_mb`, and `cost_usd` columns to each CSV row.
+
+---
+
 ## Generating Plots
 
 After running a load test, wait 1-2 minutes for CloudWatch to ingest logs, then run:
 
 ```bash
 # Experiment 1
-python3 scripts/analyze.py --config scripts/experiment1/functions.json --region us-west-2 --start 1h --output-dir plots/experiment1
+python3 scripts/analyze.py --config scripts/experiment1/functions.json \
+    --data-dir data/experiment1 --output-dir plots/experiment1
 
 # Experiment 2
-python3 scripts/analyze.py --config scripts/experiment2/functions.json --region us-west-2 --start 1h --output-dir plots/experiment2
+python3 scripts/analyze.py --config scripts/experiment2/functions.json \
+    --data-dir data/experiment2 --output-dir plots/experiment2
 ```
 
-This queries CloudWatch Logs Insights and saves 3 box plots per experiment:
+Reads from enriched CSVs (run `enrich_csv.py` first) and saves 3 box plots per experiment:
 
-- `execution_duration.png` — Lambda execution time (ms)
-- `memory_used.png` — Peak memory used (MB)
-- `cost_per_invocation.png` — Estimated cost per invocation (USD)
+- `execution_duration_boxplot.png` — Lambda execution time (ms)
+- `memory_used_boxplot.png` — Peak memory used (MB)
+- `cost_per_invocation_boxplot.png` — Estimated cost per invocation (USD)
 
 After both runs complete, generate plots from the CSVs:
 
 ```bash
 python3 scripts/experiment4/analyze.py \
-    --sustained data/experiment4/results_exp4-python-x86-sustained_<ts>.csv \
-    --burst     data/experiment4/results_exp4-python-x86-burst_<ts>.csv \
+    --sustained data/experiment4/results_exp4-python-x86-sustained.csv \
+    --burst     data/experiment4/results_exp4-python-x86-burst.csv \
     --output-dir plots/experiment4
 ```
 
@@ -169,9 +194,8 @@ To also plot Lambda execution duration from CloudWatch:
 
 ```bash
 python3 scripts/experiment4/analyze.py \
-    --function exp4-python-x86 \
-    --region us-west-2 \
-    --start 2h
+    --function exp1-python-x86 \
+    --region us-west-2
 ```
 
 ---

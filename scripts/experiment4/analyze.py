@@ -43,7 +43,9 @@ def load_csv(path: str) -> list[dict]:
 
 
 def measurement_rows(rows: list[dict]) -> list[dict]:
-    return [r for r in rows if r.get("phase") == "measurement"]
+    # sustained uses phase="measurement"; burst uses phase="spike"
+    filtered = [r for r in rows if r.get("phase") in ("measurement", "spike")]
+    return filtered if filtered else rows
 
 
 # ── Metric extraction ─────────────────────────────────────────────────────────
@@ -234,7 +236,7 @@ def plot_exec_duration(sustained_dur, burst_dur, output_dir):
     save(fig, output_dir, "execution_duration_boxplot.png")
 
 
-def print_summary(label, rows):
+def print_summary(label, rows, exec_durations=None):
     m = measurement_rows(rows)
     lat = latencies(m)
     print(f"\n{'='*50}")
@@ -244,8 +246,17 @@ def print_summary(label, rows):
     print(f"Successful (200)     : {len(lat)}")
     print(f"Error rate           : {error_rate(m):.2f}%")
     print(f"Timeout rate         : {timeout_rate(m):.2f}%")
+
+    # Throughput
+    ts = [float(r["timestamp_sent"]) for r in m if r.get("timestamp_sent")]
+    if len(ts) > 1:
+        duration_secs = max(ts) - min(ts)
+        if duration_secs > 0:
+            print(f"Throughput           : {len(lat) / duration_secs:.2f} req/s")
+
+    # End-to-end latency
     if lat:
-        print(f"Latency (ms):")
+        print(f"End-to-end latency (ms):")
         print(f"  Min    : {min(lat):.2f}")
         print(f"  Mean   : {statistics.mean(lat):.2f}")
         print(f"  Median : {statistics.median(lat):.2f}")
@@ -254,6 +265,18 @@ def print_summary(label, rows):
             print(f"  P95    : {q[int(len(q)*0.95)]:.2f}")
             print(f"  P99    : {q[int(len(q)*0.99)]:.2f}")
         print(f"  Max    : {max(lat):.2f}")
+
+    # Execution duration from CloudWatch
+    if exec_durations:
+        print(f"Execution duration (ms):")
+        print(f"  Min    : {min(exec_durations):.2f}")
+        print(f"  Mean   : {statistics.mean(exec_durations):.2f}")
+        print(f"  Median : {statistics.median(exec_durations):.2f}")
+        if len(exec_durations) >= 100:
+            q = sorted(exec_durations)
+            print(f"  P95    : {q[int(len(q)*0.95)]:.2f}")
+            print(f"  P99    : {q[int(len(q)*0.99)]:.2f}")
+        print(f"  Max    : {max(exec_durations):.2f}")
 
 
 # ── Auto-discover CSVs ────────────────────────────────────────────────────────
@@ -276,7 +299,6 @@ def parse_args():
     parser.add_argument("--output-dir",  default="plots/experiment4")
     parser.add_argument("--function",    help="Lambda function name for CloudWatch execution duration query")
     parser.add_argument("--region",      default="us-west-2")
-    parser.add_argument("--start",       default="2h", help="CloudWatch look-back window (e.g. 2h, 90m)")
     return parser.parse_args()
 
 
@@ -299,13 +321,6 @@ def main():
     s_meas = measurement_rows(sustained_rows)
     b_meas = measurement_rows(burst_rows)
 
-    # For burst profile all rows are spike phase (no warmup)
-    if not b_meas:
-        b_meas = burst_rows
-
-    print_summary("sustained", sustained_rows)
-    print_summary("burst",     burst_rows)
-
     output_dir = Path(args.output_dir)
     output_dir.mkdir(parents=True, exist_ok=True)
 
@@ -321,20 +336,37 @@ def main():
     plot_throughput(s_meas, b_meas, output_dir)
     plot_error_timeout(s_meas, b_meas, output_dir)
 
-    # Optional: CloudWatch execution duration
+    s_dur, b_dur = None, None
+
+    # Optional: CloudWatch execution duration — time windows derived from CSV timestamps
     if args.function:
         print(f"\nQuerying CloudWatch for execution duration ({args.function})...")
-        now        = datetime.now(timezone.utc)
-        start_time = now - timedelta(hours=float(args.start.rstrip("h")) if args.start.endswith("h")
-                                     else timedelta(minutes=float(args.start.rstrip("m"))))
-        durations  = query_cloudwatch(args.function, start_time, now, args.region)
-        if durations:
-            # Split roughly in half — first half = sustained window, second = burst window
-            # (Better: supply separate --start/--end per profile; good enough for now)
-            mid = len(durations) // 2
-            plot_exec_duration(durations[:mid], durations[mid:], output_dir)
+
+        def csv_window(rows):
+            ts = [float(r["timestamp_sent"]) for r in rows if r.get("timestamp_sent")]
+            if not ts:
+                return None, None
+            # Add a 60s buffer on each side so CloudWatch captures all REPORT lines
+            start = datetime.fromtimestamp(min(ts) - 60, tz=timezone.utc)
+            end   = datetime.fromtimestamp(max(ts) + 60, tz=timezone.utc)
+            return start, end
+
+        s_start, s_end = csv_window(sustained_rows)
+        b_start, b_end = csv_window(burst_rows)
+
+        s_dur = query_cloudwatch(args.function, s_start, s_end, args.region) if s_start else None
+        b_dur = query_cloudwatch(args.function, b_start, b_end, args.region) if b_start else None
+
+        if s_dur and b_dur:
+            plot_exec_duration(s_dur, b_dur, output_dir)
+        else:
+            print("  Not enough CloudWatch data for execution duration plot.")
     else:
         print("\n(Skipping execution duration — pass --function <name> to enable CloudWatch query)")
+
+    # Print summaries after CloudWatch data is available so execution duration is included
+    print_summary("sustained", sustained_rows, exec_durations=s_dur)
+    print_summary("burst",     burst_rows,     exec_durations=b_dur)
 
     print(f"\nAll plots saved to {output_dir}/")
 

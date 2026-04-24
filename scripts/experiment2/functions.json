@@ -1,10 +1,10 @@
 {
-  "exp2-java-x86-128":  "https://REPLACE_ME.lambda-url.us-west-2.on.aws/",
-  "exp2-java-x86-1024": "https://REPLACE_ME.lambda-url.us-west-2.on.aws/",
-  "exp2-java-x86-1769": "https://REPLACE_ME.lambda-url.us-west-2.on.aws/",
-  "exp2-java-x86-3008": "https://REPLACE_ME.lambda-url.us-west-2.on.aws/",
-  "exp2-java-arm-128":  "https://REPLACE_ME.lambda-url.us-west-2.on.aws/",
-  "exp2-java-arm-1024": "https://REPLACE_ME.lambda-url.us-west-2.on.aws/",
-  "exp2-java-arm-1769": "https://REPLACE_ME.lambda-url.us-west-2.on.aws/",
-  "exp2-java-arm-3008": "https://REPLACE_ME.lambda-url.us-west-2.on.aws/"
+    "exp2-java-arm-1024": "https://vyrwjonura7mbqz5fp62wgcaii0bjznd.lambda-url.us-west-2.on.aws/",
+    "exp2-java-arm-128": "https://qgcasqwklyyafx7xcfj5xnlyxe0zecsm.lambda-url.us-west-2.on.aws/",
+    "exp2-java-arm-1769": "https://ak45vui2nguz7x2xygjyn2rfwm0aoomn.lambda-url.us-west-2.on.aws/",
+    "exp2-java-arm-3008": "https://xaob735s2swbdv6e56f4us2m7m0nxjbj.lambda-url.us-west-2.on.aws/",
+    "exp2-java-x86-1024": "https://lsw3bhaaeggqljazbomdxwgyyq0zxsfg.lambda-url.us-west-2.on.aws/",
+    "exp2-java-x86-128": "https://5fjm5aqy6aolai3fi2yvwx2zl40yqqtw.lambda-url.us-west-2.on.aws/",
+    "exp2-java-x86-1769": "https://bvnr6xnpbxzthv6k3jijxzsaia0cvfvd.lambda-url.us-west-2.on.aws/",
+    "exp2-java-x86-3008": "https://hgwrita6afvmexband6zgpxxqe0tmcyq.lambda-url.us-west-2.on.aws/"
 }
