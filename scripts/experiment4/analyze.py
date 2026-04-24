@@ -157,21 +157,22 @@ def plot_latency_box(sustained_lat, burst_lat, output_dir):
     save(fig, output_dir, "latency_boxplot.png")
 
 
-def plot_latency_cdf(sustained_lat, burst_lat, output_dir):
-    fig, ax = plt.subplots(figsize=(9, 6))
-    for lat, label, color in [
-        (sustained_lat, "Sustained", COLORS["sustained"]),
-        (burst_lat,     "Burst",     COLORS["burst"]),
-    ]:
-        sorted_lat = sorted(lat)
-        cdf = np.arange(1, len(sorted_lat) + 1) / len(sorted_lat)
-        ax.plot(sorted_lat, cdf, label=label, color=color)
-    ax.set_title("End-to-End Latency CDF", fontsize=12, fontweight="bold")
-    ax.set_xlabel("Latency (ms)")
-    ax.set_ylabel("Cumulative Fraction")
-    ax.legend()
-    ax.grid(alpha=0.3)
-    save(fig, output_dir, "latency_cdf.png")
+def plot_latency_percentiles(sustained_lat, burst_lat, output_dir):
+    s = sorted(sustained_lat)
+    b = sorted(burst_lat)
+    s_p99 = s[int(len(s) * 0.99)]
+    b_p99 = b[int(len(b) * 0.99)]
+
+    fig, ax = plt.subplots(figsize=(6, 6))
+    bars = ax.bar(["Sustained", "Burst"], [s_p99, b_p99],
+                  color=[COLORS["sustained"], COLORS["burst"]], alpha=0.8, width=0.4)
+    for bar, val in zip(bars, [s_p99, b_p99]):
+        ax.text(bar.get_x() + bar.get_width() / 2, val + 1, f"{val:.0f}ms",
+                ha="center", va="bottom", fontsize=11, fontweight="bold")
+    ax.set_ylabel("Latency (ms)")
+    ax.set_title("P99 End-to-End Latency", fontsize=12, fontweight="bold")
+    ax.grid(axis="y", alpha=0.3)
+    save(fig, output_dir, "latency_p99.png")
 
 
 def plot_throughput(sustained_rows, burst_rows, output_dir):
@@ -181,7 +182,8 @@ def plot_throughput(sustained_rows, burst_rows, output_dir):
         (axes[1], burst_rows,     "Burst (500 req/s)",    COLORS["burst"]),
     ]:
         offsets, counts = throughput_series(rows, bucket_secs=5)
-        ax.bar(offsets, counts, width=4.5, color=color, alpha=0.7)
+        ax.plot(offsets, counts, color=color, linewidth=1.5)
+        ax.fill_between(offsets, counts, alpha=0.2, color=color)
         ax.set_title(label)
         ax.set_xlabel("Time since start (s)")
         ax.set_ylabel("Throughput (req/s)")
@@ -329,7 +331,7 @@ def main():
 
     if s_lat and b_lat:
         plot_latency_box(s_lat, b_lat, output_dir)
-        plot_latency_cdf(s_lat, b_lat, output_dir)
+        plot_latency_percentiles(s_lat, b_lat, output_dir)
     else:
         print("Not enough latency data for plots.")
 

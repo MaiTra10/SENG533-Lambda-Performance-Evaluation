@@ -176,8 +176,8 @@ After both runs complete, generate plots from the CSVs:
 
 ```bash
 python3 scripts/experiment4/analyze.py \
-    --sustained data/experiment4/results_exp4-python-x86-sustained.csv \
-    --burst     data/experiment4/results_exp4-python-x86-burst.csv \
+    --sustained data/experiment4/results_exp4-python-x86_sustained.csv \
+    --burst     data/experiment4/results_exp4-python-x86_burst.csv \
     --output-dir plots/experiment4
 ```
 
@@ -188,7 +188,7 @@ The script auto-discovers the latest CSVs in `data/experiment4/` if `--sustained
 Plots generated:
 
 - `latency_boxplot.png` — end-to-end latency distribution (burst vs sustained)
-- `latency_cdf.png` — latency CDF comparison
+- `latency_p99.png` — P99 end-to-end latency (burst vs sustained)
 - `throughput.png` — requests/s over time for each profile
 - `error_timeout_rate.png` — error rate & timeout rate side-by-side
 

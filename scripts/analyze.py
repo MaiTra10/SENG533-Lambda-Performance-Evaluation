@@ -88,8 +88,10 @@ def make_legend(functions):
 # ── Data loading ──────────────────────────────────────────────────────────────
 
 def find_latest_csv(data_dir, label):
-    pattern = str(Path(data_dir) / f"results_{label}_*.csv")
-    matches = sorted(glob.glob(pattern))
+    exact = Path(data_dir) / f"results_{label}.csv"
+    if exact.exists():
+        return str(exact)
+    matches = sorted(glob.glob(str(Path(data_dir) / f"results_{label}_*.csv")))
     return matches[-1] if matches else None
 
 
