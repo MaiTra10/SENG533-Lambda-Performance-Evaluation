@@ -1,0 +1,6 @@
+request_id,function_label,runtime,profile,phase,timestamp_sent,timestamp_received,latency_ms,http_status,lambda_request_id,error,is_timeout,execution_ms,init_duration_ms,billed_duration_ms,memory_used_mb,memory_size_mb
+0,exp3-python-x86,python,cold_vs_warm,cold,1777028788.487387,1777028789.1312692,643.8822746276855,200,ef75f24a-2dc6-4357-ab34-62110290af69,,False,150.930,108.700,260.000,36.240,1687.050
+1,exp3-python-x86,python,cold_vs_warm,cold,1777029689.2447271,1777029689.8948522,650.1250267028809,200,245f16f8-4ee0-4543-a77d-cbd3077223f8,,False,233.200,111.740,345.000,37.193,1687.050
+2,exp3-python-x86,python,cold_vs_warm,cold,1777030589.944617,1777030590.546037,601.4199256896973,200,fe5a7d7a-1b1a-467f-bdb6-a6bbae4e76b5,,False,163.230,136.850,301.000,36.240,1687.050
+3,exp3-python-x86,python,cold_vs_warm,cold,1777031490.677678,1777031491.214153,536.4749431610107,200,b5cbe473-ee83-4796-8109-6c940e1510b4,,False,146.670,121.410,269.000,36.240,1687.050
+4,exp3-python-x86,python,cold_vs_warm,cold,1777032391.331272,1777032391.885939,554.6669960021973,200,69f4c178-dc77-49e0-af96-389a596a179a,,False,,,,,
