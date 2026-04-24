@@ -457,6 +457,98 @@ module "exp2_java_arm_3008" {
 #   actions = ["s3:*"]
 # }
 
+# ============
+# Experiment 3
+# Cold vs Warm Start Behavior
+# Reuses Experiment 1 CPU-bound matrix multiplication code
+# ============
+
+locals {
+  exp3_memory_size = 1769
+  exp3_timeout     = 10
+}
+
+# ============
+# Python x86
+# ============
+module "exp3_python_x86" {
+  source = "./templates/lambda"
+
+  # Reuse Experiment 1 Python CPU-bound code
+  path_name       = "python"
+  zip_dir_slice   = "experiment1"
+  deployment_file = "bootstrap.zip"
+
+  function_name = "exp3-python-x86"
+
+  architectures = ["x86_64"]
+  runtime       = "python3.13"
+  handler       = "main.exp1_workloads"
+  memory_size   = local.exp3_memory_size
+  timeout       = local.exp3_timeout
+
+  resources = [
+    aws_s3_bucket.private_bucket.arn,
+    "${aws_s3_bucket.private_bucket.arn}/*"
+  ]
+
+  actions = ["s3:*"]
+}
+
+# ============
+# Go x86
+# ============
+module "exp3_go_x86" {
+  source = "./templates/lambda"
+
+  # Reuse Experiment 1 Go CPU-bound code
+  path_name       = "go"
+  zip_dir_slice   = "experiment1"
+  deployment_file = "x86/bootstrap.zip"
+
+  function_name = "exp3-go-x86"
+
+  architectures = ["x86_64"]
+  runtime       = "provided.al2023"
+  handler       = "main"
+  memory_size   = local.exp3_memory_size
+  timeout       = local.exp3_timeout
+
+  resources = [
+    aws_s3_bucket.private_bucket.arn,
+    "${aws_s3_bucket.private_bucket.arn}/*"
+  ]
+
+  actions = ["s3:*"]
+}
+
+# ============
+# Java x86
+# ============
+module "exp3_java_x86" {
+  source = "./templates/lambda"
+
+  # Reuse Experiment 1 Java CPU-bound code
+  path_name       = "java"
+  zip_dir_slice   = "experiment1"
+  deployment_file = "bootstrap.jar"
+
+  function_name = "exp3-java-x86"
+
+  architectures = ["x86_64"]
+  runtime       = "java25"
+  handler       = "seng533.lambda.java.experiment1.Handler::handleRequest"
+  memory_size   = local.exp3_memory_size
+  timeout       = local.exp3_timeout
+
+  resources = [
+    aws_s3_bucket.private_bucket.arn,
+    "${aws_s3_bucket.private_bucket.arn}/*"
+  ]
+
+  actions = ["s3:*"]
+}
+
 # Creates a text file with Lambda function URL data in the module directory /details folder
 # (makes one if does not already exist)
 
@@ -481,12 +573,21 @@ locals {
     "exp2-java-arm-1769" = module.exp2_java_arm_1769.function_url
     "exp2-java-arm-3008" = module.exp2_java_arm_3008.function_url
   }
+
+    exp3_lambda_urls = {
+    "exp3-python-x86" = module.exp3_python_x86.function_url
+    "exp3-go-x86"     = module.exp3_go_x86.function_url
+    "exp3-java-x86"   = module.exp3_java_x86.function_url
+  }
 }
+
+
 
 locals {
   all_lambda_urls = {
     exp1 = local.exp1_lambda_urls
     exp2 = local.exp2_lambda_urls
+    exp3 = local.exp3_lambda_urls
   }
 }
 
@@ -505,6 +606,12 @@ ${join(",\n", [
   "exp2": {
 ${join(",\n", [
   for k, v in local.exp2_lambda_urls :
+  "    \"${k}\": \"${v}\""
+])}
+  },
+  "exp3": {
+${join(",\n", [
+  for k, v in local.exp3_lambda_urls :
   "    \"${k}\": \"${v}\""
 ])}
   }

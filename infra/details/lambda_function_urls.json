@@ -1,20 +1,25 @@
 {
   "exp1": {
-    "exp1-go-arm": "https://jlmcm2ubt7iugq6yxkvarrgdvm0nhbqe.lambda-url.us-west-2.on.aws/",
-    "exp1-go-x86": "https://pzkfpvpno25ab3rn52gpmcm3pu0ckcfe.lambda-url.us-west-2.on.aws/",
-    "exp1-java-arm": "https://ypbbnar2afxn766qbfdognrlmy0ujzos.lambda-url.us-west-2.on.aws/",
-    "exp1-java-x86": "https://dbcwptiggttdsj3t32f2svqnuu0gfzte.lambda-url.us-west-2.on.aws/",
-    "exp1-python-arm": "https://b7rj2bkggbmgua7euebbixipnu0frokj.lambda-url.us-west-2.on.aws/",
-    "exp1-python-x86": "https://26qewpecwb7ydwgzbk43ygq2oq0nkpzm.lambda-url.us-west-2.on.aws/"
+    "exp1-go-arm": "https://em3jtac6sjssbohaxnxiudsq640cjcyx.lambda-url.us-west-2.on.aws/",
+    "exp1-go-x86": "https://3susscbb5nikq44buswjash3wm0tmagb.lambda-url.us-west-2.on.aws/",
+    "exp1-java-arm": "https://vkplm4fxhvb6eagpiq5d5woer40eqzpc.lambda-url.us-west-2.on.aws/",
+    "exp1-java-x86": "https://izhlododhptq7zeboszksyg5gi0iskkz.lambda-url.us-west-2.on.aws/",
+    "exp1-python-arm": "https://6g2zhcs6b6kraitwxxfffeft6e0eflgx.lambda-url.us-west-2.on.aws/",
+    "exp1-python-x86": "https://cpbvcd6td6hvdihue4javfwzsm0zrsge.lambda-url.us-west-2.on.aws/"
   },
   "exp2": {
-    "exp2-java-arm-1024": "https://ztwopfpmqni6qbyorrzu4fdxey0qucpo.lambda-url.us-west-2.on.aws/",
-    "exp2-java-arm-128": "https://vbjgr5na2jrtccljwmcudzkhiy0bzauz.lambda-url.us-west-2.on.aws/",
-    "exp2-java-arm-1769": "https://3jvgcbicn6dnpmukunu42z6mma0uqcnv.lambda-url.us-west-2.on.aws/",
-    "exp2-java-arm-3008": "https://bqpd23jzn2wnh3lk7cimtvutwu0grvbj.lambda-url.us-west-2.on.aws/",
-    "exp2-java-x86-1024": "https://dcwuaqivrrf7zuq2njcjgr3wvq0hjptx.lambda-url.us-west-2.on.aws/",
-    "exp2-java-x86-128": "https://27p3q4bxrqqnfu7rvgilch5pke0ueiit.lambda-url.us-west-2.on.aws/",
-    "exp2-java-x86-1769": "https://hi4ujdgzgajknn63crasms45ke0mtllu.lambda-url.us-west-2.on.aws/",
-    "exp2-java-x86-3008": "https://dg4mipdyqp44ruv2qkoirlbsqe0oitrg.lambda-url.us-west-2.on.aws/"
+    "exp2-java-arm-1024": "https://hyavshfaj3q6ile46vlydyfxbe0chvox.lambda-url.us-west-2.on.aws/",
+    "exp2-java-arm-128": "https://nkk4u247yoehwcwa5wbgr6dwzq0lauxv.lambda-url.us-west-2.on.aws/",
+    "exp2-java-arm-1769": "https://nbbzpuvjd4nnruywg4ahctt7ku0jpgcj.lambda-url.us-west-2.on.aws/",
+    "exp2-java-arm-3008": "https://6wlb4s753djncsgjdkicb4jlmu0jhnqt.lambda-url.us-west-2.on.aws/",
+    "exp2-java-x86-1024": "https://27x2gyykzilgsctzanpaykxsry0mkgeh.lambda-url.us-west-2.on.aws/",
+    "exp2-java-x86-128": "https://eqzrlypf2t3we23zffw5gssloi0xmjnm.lambda-url.us-west-2.on.aws/",
+    "exp2-java-x86-1769": "https://pjkzqfexvicb5tcu2cuildg33u0mdxhv.lambda-url.us-west-2.on.aws/",
+    "exp2-java-x86-3008": "https://ufdboojjofs54uyhcd2f35qqwy0bzxlq.lambda-url.us-west-2.on.aws/"
+  },
+  "exp3": {
+    "exp3-go-x86": "https://fov36mld2rjloj5gwxvlfirdrq0wfbrf.lambda-url.us-west-2.on.aws/",
+    "exp3-java-x86": "https://r5zgtfncmc6idvd6siirptenqy0clbqs.lambda-url.us-west-2.on.aws/",
+    "exp3-python-x86": "https://bvpxu5sb7mhrxk7verfqsrajqy0gmaqt.lambda-url.us-west-2.on.aws/"
   }
 }

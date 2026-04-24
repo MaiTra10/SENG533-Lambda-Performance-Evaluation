@@ -1,0 +1,6 @@
+request_id,function_label,runtime,profile,phase,timestamp_sent,timestamp_received,latency_ms,http_status,lambda_request_id,error,is_timeout,execution_ms,init_duration_ms,billed_duration_ms,memory_used_mb,memory_size_mb
+0,exp3-java-x86,java,cold_vs_warm,cold,1777028788.490771,1777028789.169535,678.7638664245605,200,651eed2f-e6bd-49dc-827f-b4716b366f23,,False,38.870,352.710,392.000,88.692,1687.050
+1,exp3-java-x86,java,cold_vs_warm,cold,1777029689.248638,1777029689.915679,667.0410633087158,200,8db90239-ec62-4f5f-8242-fa072cd4abe2,,False,37.220,349.860,388.000,88.692,1687.050
+2,exp3-java-x86,java,cold_vs_warm,cold,1777030589.9489212,1777030590.663326,714.404821395874,200,b7a5ce32-c9e4-40a6-8cfe-83e6f466fa69,,False,48.190,362.080,411.000,88.692,1687.050
+3,exp3-java-x86,java,cold_vs_warm,cold,1777031490.678661,1777031491.34321,664.5488739013672,200,68551384-9c0a-460d-b1be-e05e13beb6cb,,False,39.560,358.170,398.000,89.645,1687.050
+4,exp3-java-x86,java,cold_vs_warm,cold,1777032391.331761,1777032392.036695,704.9341201782227,200,2f91abae-0595-4549-8b7d-1663b42eb800,,False,,,,,
