@@ -1,0 +1,8 @@
+{
+  "exp1-go-arm": "https://m4aybjze7krqphwkxgkpgyitpu0einrt.lambda-url.us-west-2.on.aws/",
+  "exp1-go-x86": "https://ecvy774vutjwsdiklr4tczshfi0bdvuh.lambda-url.us-west-2.on.aws/",
+  "exp1-java-arm": "https://pz447zflzgrphg5ulphlry4j3a0kcyht.lambda-url.us-west-2.on.aws/",
+  "exp1-java-x86": "https://a67atvo6mqy6lgghmveykh7gze0vwnon.lambda-url.us-west-2.on.aws/",
+  "exp1-python-arm": "https://zamh3xoaydss6rfds2z2vr34wq0hjkks.lambda-url.us-west-2.on.aws/",
+  "exp1-python-x86": "https://zo72jpxc52zgrzluje4d5levpu0butma.lambda-url.us-west-2.on.aws/"
+}
