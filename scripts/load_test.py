@@ -113,6 +113,14 @@ async def progress_reporter(label, results, total_requests, warmup_count, start_
         print(f"  [{label}] [{elapsed:6.1f}s] {phase} | sent: {n}/{total_requests} | errors: {errors}")
 
 
+async def run_all_sustained(functions, rate, warmup_secs, duration_secs, req_timeout):
+    tasks = [
+        run_sustained(url, label, rate, warmup_secs, duration_secs, req_timeout)
+        for label, url in functions.items()
+    ]
+    return await asyncio.gather(*tasks)
+
+
 async def run_sustained(url, label, rate, warmup_secs, duration_secs, req_timeout):
     results = []
     warmup_count = int(warmup_secs * rate)
@@ -270,23 +278,20 @@ def main():
                     sys.exit(1)
                 label, url = next(iter(functions.items()))
                 results = asyncio.run(run_burst(url, args.timeout))
-                timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-                output_path = Path(args.output) if args.output else output_dir / f"results_{label}_burst_{timestamp}.csv"
+                output_path = Path(args.output) if args.output else output_dir / f"results_{label}_burst.csv"
                 write_csv(results, output_path)
                 print_summary(label, results, "burst")
             else:
                 total = len(functions)
                 print(f"Loaded {total} functions from {args.config}")
+                print(f"Profile: SUSTAINED | Running all {total} functions in PARALLEL")
+                print(f"Rate: {args.rate} req/s per function | Warmup: {args.warmup}s | Duration: {args.duration}s")
                 print()
-                for i, (label, url) in enumerate(functions.items(), 1):
-                    print(f"{'#' * 60}")
-                    print(f"# [{i}/{total}] {label}")
-                    print(f"{'#' * 60}")
-                    results = asyncio.run(
-                        run_sustained(url, label, args.rate, args.warmup, args.duration, args.timeout)
-                    )
-                    timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-                    output_path = output_dir / f"results_{label}_{timestamp}.csv"
+                all_results = asyncio.run(
+                    run_all_sustained(functions, args.rate, args.warmup, args.duration, args.timeout)
+                )
+                for (label, _), results in zip(functions.items(), all_results):
+                    output_path = output_dir / f"results_{label}.csv"
                     write_csv(results, output_path)
                     print_summary(label, results)
                     print()
@@ -294,14 +299,12 @@ def main():
         else:
             if args.profile == "burst":
                 results = asyncio.run(run_burst(args.url, args.timeout))
-                timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-                output_path = Path(args.output or f"results_{args.label}_burst_{timestamp}.csv")
+                output_path = Path(args.output or f"results_{args.label}_burst.csv")
             else:
                 results = asyncio.run(
                     run_sustained(args.url, args.label, args.rate, args.warmup, args.duration, args.timeout)
                 )
-                timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-                output_path = Path(args.output or f"results_{args.label}_{timestamp}.csv")
+                output_path = Path(args.output or f"results_{args.label}.csv")
             write_csv(results, output_path)
             print_summary(args.label, results, args.profile)
 

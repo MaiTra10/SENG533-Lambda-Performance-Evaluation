@@ -7,7 +7,7 @@ Joins on lambda_request_id (x-amzn-requestid header captured during the run).
 
 Usage:
     python3 scripts/enrich_csv.py \
-        --csv data/experiment1/results_exp1-python-x86_<ts>.csv \
+        --csv data/experiment1/results_exp1-python-x86.csv \
         --function exp1-python-x86 \
         --region us-west-2
 
@@ -23,7 +23,7 @@ import csv
 import json
 import sys
 import time
-from datetime import datetime, timezone
+from datetime import datetime, timedelta, timezone
 from pathlib import Path
 
 import boto3
@@ -32,8 +32,8 @@ PRICE_X86 = 0.0000166667   # USD per GB-second
 PRICE_ARM  = 0.0000133334
 
 
-def query_cloudwatch(client, function_name, start_time, end_time):
-    log_group = f"/aws/lambda/{function_name}"
+def _run_query(client, log_group, start_time, end_time):
+    """Run a single CloudWatch Logs Insights query and return records keyed by requestId."""
     query = (
         "filter @type = \"REPORT\"\n"
         "| fields @requestId, @duration, @maxMemoryUsed, @memorySize, @billedDuration\n"
@@ -51,7 +51,6 @@ def query_cloudwatch(client, function_name, start_time, end_time):
         if result["status"] == "Complete":
             break
         if result["status"] == "Failed":
-            print(f"  CloudWatch query failed for {function_name}")
             return {}
         time.sleep(1)
 
@@ -61,6 +60,27 @@ def query_cloudwatch(client, function_name, start_time, end_time):
         rid = r.get("@requestId", "").strip()
         if rid:
             records[rid] = r
+    return records
+
+
+def query_cloudwatch(client, function_name, start_time, end_time):
+    """Query CloudWatch in chunks to work around the 10,000 result API cap."""
+    log_group = f"/aws/lambda/{function_name}"
+    total_secs = (end_time - start_time).total_seconds()
+    # Split into chunks small enough that each returns < 10,000 records
+    chunk_secs = max(60, total_secs / 4)
+
+    records = {}
+    chunk_start = start_time
+    chunk_num = 0
+    while chunk_start < end_time:
+        chunk_end = min(chunk_start + timedelta(seconds=chunk_secs), end_time)
+        chunk_records = _run_query(client, log_group, chunk_start, chunk_end)
+        records.update(chunk_records)
+        chunk_num += 1
+        chunk_start = chunk_end
+
+    print(f"  ({chunk_num} CloudWatch queries, {len(records)} unique records)")
     return records
 
 
@@ -158,7 +178,8 @@ def main():
 
         data_dir = Path(args.dir)
         for label in functions:
-            matches = sorted(data_dir.glob(f"results_{label}_*.csv"))
+            exact = data_dir / f"results_{label}.csv"
+            matches = [exact] if exact.exists() else sorted(data_dir.glob(f"results_{label}_*.csv"))
             if not matches:
                 print(f"No CSV found for {label} in {data_dir}")
                 continue
