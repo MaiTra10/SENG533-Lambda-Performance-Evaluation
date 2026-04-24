@@ -96,7 +96,7 @@ After a successful apply, Function URLs are written to `infra/details/lambda_fun
 
 ### Experiment 1 — Runtime Environment Impact
 
-Tests Python, Go, and Java across x86 and ARM at 1769 MB. Sustained 50 req/s for 5 minutes with a 60s warmup.
+Tests Python, Go, and Java across x86 and ARM at 1769 MB. Sustained 50 req/s per function for 5 minutes with a 60s warmup. All 6 functions run in parallel.
 
 ```bash
 python3 scripts/load_test.py --config scripts/experiment1/functions.json
@@ -104,7 +104,7 @@ python3 scripts/load_test.py --config scripts/experiment1/functions.json
 
 ### Experiment 2 — Memory Allocation & Cost Efficiency
 
-Tests Java across 4 memory configs (128, 1024, 1769, 3008 MB) on x86 and ARM. Same sustained profile.
+Tests Java across 4 memory configs (128, 1024, 1769, 3008 MB) on x86 and ARM. Same sustained profile. All 8 functions run in parallel.
 
 ```bash
 python3 scripts/load_test.py --config scripts/experiment2/functions.json
@@ -143,7 +143,7 @@ python3 scripts/enrich_csv.py \
 
 # Or enrich a single CSV
 python3 scripts/enrich_csv.py \
-    --csv data/experiment1/results_exp1-python-x86_<ts>.csv \
+    --csv data/experiment1/results_exp1-python-x86.csv \
     --function exp1-python-x86 \
     --region us-west-2
 ```
@@ -180,6 +180,8 @@ python3 scripts/experiment4/analyze.py \
     --burst     data/experiment4/results_exp4-python-x86-burst.csv \
     --output-dir plots/experiment4
 ```
+
+> CSV filenames follow the pattern `results_{label}.csv` (e.g. `results_exp1-python-x86.csv`). Re-running a test overwrites the existing file.
 
 The script auto-discovers the latest CSVs in `data/experiment4/` if `--sustained`/`--burst` are omitted.
 
