@@ -172,6 +172,114 @@ module "exp1_java_arm" {
   actions = ["s3:*"]
 }
 
+# used for IO bound task, didnt make new lambdas for IO bound just replacing the code with IO bound code.
+
+# # ============
+# # Go
+# # x86
+# # IO
+# # ============
+# module "exp1_go_x86" {
+#   source = "./templates/lambda"
+
+#   path_name = "go"
+#   zip_dir_slice = "placeholder-x86"
+#   deployment_file = "bootstrap.zip"
+
+#   function_name = "exp1-go-x86"
+
+#   architectures = ["x86_64"]
+#   runtime = "provided.al2023"
+#   handler = "main"
+#   memory_size = local.exp1_memory_size
+#   timeout     = local.exp1_timeout
+
+#   resources = [
+#     aws_s3_bucket.private_bucket.arn,
+#     "${aws_s3_bucket.private_bucket.arn}/*"
+#   ]
+#   actions = ["s3:*"]
+
+# }
+# # ============
+# # ARM
+# # IO
+# # ============
+# module "exp1_go_arm" {
+#   source = "./templates/lambda"
+
+#   path_name = "go"
+#   zip_dir_slice = "placeholder-arm"
+#   deployment_file = "bootstrap.zip"
+
+#   function_name = "exp1-go-arm"
+
+#   architectures = ["arm64"]
+#   runtime = "provided.al2023"
+#   handler = "main"
+#   memory_size = local.exp1_memory_size
+#   timeout     = local.exp1_timeout
+
+#   resources = [
+#     aws_s3_bucket.private_bucket.arn,
+#     "${aws_s3_bucket.private_bucket.arn}/*"
+#   ]
+#   actions = ["s3:*"]
+
+# }
+# # ============
+# # Java
+# # x86
+# # IO
+# # ============
+# module "exp1_java_x86" {
+#   source = "./templates/lambda"
+
+#   path_name       = "java"
+#   zip_dir_slice   = "placeholder"
+#   deployment_file = "bootstrap.jar"
+
+#   function_name = "exp1-java-x86"
+
+#   architectures = ["x86_64"]
+#   runtime       = "java25"
+#   handler       = "seng533.lambda.java.placeholder.Handler::handleRequest"
+#   memory_size = local.exp1_memory_size
+#   timeout     = local.exp1_timeout
+
+#   resources = [
+#     aws_s3_bucket.private_bucket.arn,
+#     "${aws_s3_bucket.private_bucket.arn}/*"
+#   ]
+#   actions = ["s3:*"]
+# }
+# # ============
+# # ARM
+# # IO
+# # ============
+# module "exp1_java_arm" {
+#   source = "./templates/lambda"
+
+#   path_name       = "java"
+#   zip_dir_slice   = "placeholder"
+#   deployment_file = "bootstrap.jar"
+
+#   function_name = "exp1-java-arm"
+
+#   architectures = ["arm64"]
+#   runtime       = "java25"
+#   handler       = "seng533.lambda.java.placeholder.Handler::handleRequest"
+#   memory_size = local.exp1_memory_size
+#   timeout     = local.exp1_timeout
+
+#   resources = [
+#     aws_s3_bucket.private_bucket.arn,
+#     "${aws_s3_bucket.private_bucket.arn}/*"
+#   ]
+#   actions = ["s3:*"]
+# }
+
+
 # ============
 # Experiment 2
 # ============
